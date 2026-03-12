@@ -79,6 +79,8 @@ export default async function adminRoutes(
     const roles = payload.realm_access?.roles ?? []
     const canEdit = roles.includes('editor')
 
+    const characterTextureIds = request.query.characterTextureIds ?? []
+
     return {
       status: 'ok',
       email: payload.email ?? payload.preferred_username ?? '',
@@ -86,8 +88,8 @@ export default async function adminRoutes(
       userUuid: payload.sub,
       tags: roles,
       visitCardUrl: '',
-      isCharacterTexturesValid: false,
-      characterTextures: [],
+      isCharacterTexturesValid: (characterTextureIds.length > 0),
+      characterTextures: characterTextureIds,
       isCompanionTextureValid: false,
       companionTexture: null,
       messages: [],
