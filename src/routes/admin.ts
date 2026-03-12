@@ -23,6 +23,7 @@ import type {
   IceServersQuerystring,
   RoomUuidQuerystring,
 } from '../models/admin'
+import { it } from 'node:test'
 
 const dataDir = join(process.cwd(), 'src')
 
@@ -79,7 +80,15 @@ export default async function adminRoutes(
     const roles = payload.realm_access?.roles ?? []
     const canEdit = roles.includes('editor')
 
-    const characterTextureIds = request.query.characterTextureIds ?? []
+    const wokaList = JSON.parse(readFileSync(join(dataDir, 'list.json'), 'utf-8'))
+    const characterTextures: { id: string, url: string }[] = []
+    for (const collection of wokaList.woka.collections) {
+      for (const texture of collection.textures) {
+        if (request.query.characterTextureIds?.includes(texture.id)) {
+          characterTextures.push({ id: texture.id, url: texture.url })
+        }
+      }
+    }
 
     return {
       status: 'ok',
@@ -87,19 +96,24 @@ export default async function adminRoutes(
       username: payload.name ?? payload.preferred_username ?? payload.email ?? 'Anonymous',
       userUuid: payload.sub,
       tags: roles,
-      visitCardUrl: '',
-      isCharacterTexturesValid: (characterTextureIds.length > 0),
-      characterTextures: characterTextureIds,
-      isCompanionTextureValid: false,
-      companionTexture: null,
-      messages: [],
-      userRoomToken: '',
+      visitCardUrl: "https://mycompany.com/contact/me",
+      isCharacterTexturesValid: (characterTextures.length > 0),
+      characterTextures: characterTextures.map(texture => ({ id: texture.id, url: `https://play.ehealth.id/${texture.url}` })),
+      isCompanionTextureValid: true,
+      companionTexture: {
+        "id": "03395306-5dee-4b16-a034-36f2c5f2324a",
+        "url": "http://example.com/resources/companion/pipoya/cat.png"
+      },
+      messages: [
+        "string"
+      ],
+      userRoomToken: "",
       activatedInviteUser: true,
       applications: [],
-      canEdit,
-      world: '',
-      chatID: '',
-      canRecord: false
+      canEdit: true,
+      world: "string",
+      chatID: "string",
+      canRecord: true
     }
   })
 
