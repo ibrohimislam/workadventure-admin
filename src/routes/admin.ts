@@ -83,10 +83,14 @@ export default async function adminRoutes(
     const characterTextures: { id: string, url: string }[] = []
     const rawIds = request.query.characterTextureIds
     const characterTextureIds = Array.isArray(rawIds) ? rawIds : rawIds ? [rawIds] : []
-    for (const collection of wokaList.woka.collections) {
-      for (const texture of collection.textures) {
-        if (characterTextureIds.includes(texture.id)) {
-          characterTextures.push({ id: texture.id, url: texture.url })
+    
+    const collectionNamespace = ["accessory", "body", "clothes", "eyes", "hair", "hat", "woka"]
+    for (const namespace of collectionNamespace) {
+      for (const collection of wokaList[namespace].collections) {
+        for (const texture of collection.textures) {
+          if (characterTextureIds.includes(texture.id)) {
+            characterTextures.push({ id: texture.id, url: texture.url })
+          }
         }
       }
     }
