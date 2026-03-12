@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { decodeJwt } from 'jose'
 import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
 import type {
   MapQuerystring,
@@ -25,6 +26,18 @@ import type {
 
 const dataDir = join(process.cwd(), 'src')
 
+/** JWT payload shape */
+interface JwtPayload {
+  sub: string
+  email?: string
+  name?: string
+  preferred_username?: string
+  given_name?: string
+  family_name?: string
+  realm_access?: { roles?: string[] }
+  resource_access?: Record<string, { roles?: string[] }>
+}
+
 /**
  * WorkAdventure Pusher -> Admin API routes
  * Based on https://play.workadventu.re/openapi/admin
@@ -44,8 +57,48 @@ export default async function adminRoutes(
   })
 
   // GET /api/room/access - Returns member's info if they can access the room
-  fastify.get<{ Querystring: RoomAccessQuerystring }>('/api/room/access', async () => {
-    return JSON.parse(readFileSync(join(dataDir, 'access.json'), 'utf-8'))
+  fastify.get<{ Querystring: RoomAccessQuerystring }>('/api/room/access', async (request, reply) => {
+    const { accessToken } = request.query
+
+    if (!accessToken) {
+      return reply.code(401).send({ status: 'error', message: 'Missing accessToken' })
+    }
+
+    let payload: JwtPayload
+    try {
+      const decoded = decodeJwt(accessToken)
+      payload = decoded as unknown as JwtPayload
+    } catch (err) {
+      return reply.code(401).send({ status: 'error', message: 'Invalid access token' })
+    }
+
+    if (payload.email != request.query.userIdentifier) {
+      return reply.code(401).send({ status: 'error', message: 'Access token is not valid for this user' })
+    }
+
+    const roles = payload.realm_access?.roles ?? []
+    const canEdit = roles.includes('editor')
+
+    return {
+      status: 'ok',
+      email: payload.email ?? payload.preferred_username ?? '',
+      username: payload.name ?? payload.preferred_username ?? payload.email ?? 'Anonymous',
+      userUuid: payload.sub,
+      tags: roles,
+      visitCardUrl: '',
+      isCharacterTexturesValid: false,
+      characterTextures: [],
+      isCompanionTextureValid: false,
+      companionTexture: null,
+      messages: [],
+      userRoomToken: '',
+      activatedInviteUser: true,
+      applications: [],
+      canEdit,
+      world: '',
+      chatID: '',
+      canRecord: false
+    }
   })
 
   // GET /api/login-url/:organizationMemberToken - Returns member from token
