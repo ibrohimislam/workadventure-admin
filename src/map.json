@@ -79,7 +79,7 @@
   "primaryColor": "#330033",
   "reportIssuesUrl": null,
   "entityCollectionsUrls": [
-    "string"
+    "http://ehealth-co-id-20108.map-storage.workadventu.re/entityCollections"
   ],
   "errorSceneLogo": null,
   "modules": [
