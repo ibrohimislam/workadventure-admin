@@ -1,0 +1,47 @@
+{
+    "status": "ok",
+    "email": "example@workadventu.re",
+    "username": "Greg",
+    "userUuid": "998ce839-3dea-4698-8b41-ebbdf7688ad9",
+    "tags": [
+      "editor"
+    ],
+    "visitCardUrl": "https://mycompany.com/contact/me",
+    "isCharacterTexturesValid": true,
+    "characterTextures": [
+      {
+        "id": "03395306-5dee-4b16-a034-36f2c5f2324a",
+        "url": "http://example.com/resources/characters/pipoya/male.png"
+      }
+    ],
+    "isCompanionTextureValid": true,
+    "companionTexture": {
+      "id": "03395306-5dee-4b16-a034-36f2c5f2324a",
+      "url": "http://example.com/resources/companion/pipoya/cat.png"
+    },
+    "messages": [
+      "string"
+    ],
+    "userRoomToken": "",
+    "activatedInviteUser": true,
+    "applications": [
+      {
+        "name": "Onboarding woka",
+        "script": "http://example.com/my/script.js",
+        "doc": "http://example.com/my/doc.html",
+        "image": "http://example.com/my/image.png",
+        "description": "This application is a great application",
+        "enabled": true,
+        "regexUrl": "https://www.youtube.com/watch?v=(.*)",
+        "targetUrl": "https://www.youtube.com/embed/$1",
+        "default": true,
+        "forceNewTab": true,
+        "allowAPI": true,
+        "policy": "http://example.com/my/policy.html"
+      }
+    ],
+    "canEdit": true,
+    "world": "string",
+    "chatID": "string",
+    "canRecord": true
+  }

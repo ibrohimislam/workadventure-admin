@@ -1,0 +1,96 @@
+{
+    "mapUrl": "https://workadventure.github.io/wam-preset-startup/map.tmj",
+    "wamUrl": "https://ehealth-co-id-20108.map-storage.workadventu.re/startup.wam",
+    "authenticationMandatory": true,
+    "group": "https://play.ehealth.id/",
+    "contactPage": null,
+    "opidLogoutRedirectUrl": "https://accounts.ehealth.co.id/logout",
+    "opidWokaNamePolicy": "user_input",
+    "expireOn": null,
+    "canReport": true,
+    "editable": true,
+    "loadingLogo": "https://example.com/logo.png",
+    "loginSceneLogo": "https://example.com/logo_login.png",
+    "backgroundSceneImage": "https://example.com/background.png",
+    "showPoweredBy": true,
+    "thirdParty": {
+      "bbb": {
+        "url": "https://test-install.blindsidenetworks.com/bigbluebutton/",
+        "secret": "string"
+      },
+      "jitsi": {
+        "url": "meet.jit.si",
+        "iss": false,
+        "secret": "string"
+      }
+    },
+    "metadata": "string",
+    "roomName": "eHealth.co.id",
+    "pricingUrl": null,
+    "enableMatrixChat": true,
+    "enableChat": true,
+    "enableChatUpload": true,
+    "enableChatOnlineList": true,
+    "enableChatDisconnectedList": true,
+    "enableSay": true,
+    "enableIssueReport": true,
+    "defaultWokaName": "Guest123",
+    "defaultWokaTexture": "https://example.com/textures/guest.png",
+    "metatags": {
+      "title": "WorkAdventure - My Awesome World",
+      "description": "My awesome world in WorkAdventure",
+      "author": "My Awesome team",
+      "provider": "WorkAdventure SAAS platform",
+      "favIcons": [
+        {
+          "rel": "apple-touch-icon",
+          "sizes": "57x57",
+          "src": "https://workadventu.re/icons/apple-icon-57x57.png"
+        }
+      ],
+      "manifestIcons": [
+        {
+          "sizes": "57x57 64x64",
+          "src": "https://workadventu.re/icons/apple-icon-57x57.png",
+          "type": "image/webp",
+          "purpose": "any"
+        }
+      ],
+      "appName": "WorkAdventure",
+      "shortAppName": "WA",
+      "themeColor": "#000000",
+      "cardImage": "https://example.com/awesome_world.png"
+    },
+    "legals": {
+      "termsOfUseUrl": "string",
+      "privacyPolicyUrl": "string",
+      "cookiePolicyUrl": "string"
+    },
+    "customizeWokaScene": {
+      "clothesIcon": "string",
+      "accessoryIcon": "string",
+      "hatIcon": "string",
+      "hairIcon": "string",
+      "eyesIcon": "string",
+      "bodyIcon": "string",
+      "turnIcon": "string"
+    },
+    "backgroundColor": "#330033",
+    "primaryColor": "#330033",
+    "reportIssuesUrl": null,
+    "entityCollectionsUrls": [
+      "string"
+    ],
+    "errorSceneLogo": null,
+    "modules": [
+      "string"
+    ],
+    "isLogged": true,
+    "provideDefaultWokaName": "random",
+    "provideDefaultWokaTexture": "random",
+    "skipCameraPage": true,
+    "recording": {
+      "buttonState": "enabled",
+      "disabledReason": "Recording requires a premium subscription."
+    }
+  }
