@@ -23,7 +23,6 @@ import type {
   IceServersQuerystring,
   RoomUuidQuerystring,
 } from '../models/admin'
-import { it } from 'node:test'
 
 const dataDir = join(process.cwd(), 'src')
 
@@ -82,15 +81,15 @@ export default async function adminRoutes(
 
     const wokaList = JSON.parse(readFileSync(join(dataDir, 'list.json'), 'utf-8'))
     const characterTextures: { id: string, url: string }[] = []
+    const rawIds = request.query.characterTextureIds
+    const characterTextureIds = Array.isArray(rawIds) ? rawIds : rawIds ? [rawIds] : []
     for (const collection of wokaList.woka.collections) {
       for (const texture of collection.textures) {
-        if (request.query.characterTextureIds?.includes(texture.id)) {
+        if (characterTextureIds.includes(texture.id)) {
           characterTextures.push({ id: texture.id, url: texture.url })
         }
       }
     }
-
-    console.log(characterTextures)
 
     const response = {
       status: 'ok',
@@ -117,7 +116,6 @@ export default async function adminRoutes(
       chatID: "string",
       canRecord: true
     }
-    console.log(response)
     return reply.code(200).send(response)
   })
 

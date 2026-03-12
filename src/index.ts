@@ -1,4 +1,5 @@
 import fastify from 'fastify'
+import qs from 'qs'
 import GracefulServer from '@gquittet/graceful-server'
 import adminRoutes from './routes/admin'
 // import * as Sentry from '@sentry/node';
@@ -14,6 +15,7 @@ const fastifyInstance = fastify({
   logger: true,
   trustProxy: true,
   bodyLimit: maxFileSize,
+  querystringParser: (str) => qs.parse(str),
 })
 
 // Sentry.setupFastifyErrorHandler(fastifyInstance);
