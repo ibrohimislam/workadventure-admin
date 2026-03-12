@@ -82,9 +82,7 @@
     "http://ehealth-co-id-20108.map-storage.workadventu.re/entityCollections"
   ],
   "errorSceneLogo": null,
-  "modules": [
-    "string"
-  ],
+  "modules": [],
   "isLogged": true,
   "provideDefaultWokaName": "random",
   "provideDefaultWokaTexture": "random",

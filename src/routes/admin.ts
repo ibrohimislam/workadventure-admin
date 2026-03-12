@@ -104,11 +104,8 @@ export default async function adminRoutes(
       visitCardUrl: "https://mycompany.com/contact/me",
       isCharacterTexturesValid: (characterTextures.length > 0),
       characterTextures: characterTextures.map(texture => ({ id: texture.id, url: `https://play.ehealth.id/${texture.url}` })),
-      isCompanionTextureValid: true,
-      companionTexture: {
-        "id": "03395306-5dee-4b16-a034-36f2c5f2324a",
-        "url": "http://example.com/resources/companion/pipoya/cat.png"
-      },
+      isCompanionTextureValid: false,
+      companionTexture: null,
       messages: [
         "string"
       ],
