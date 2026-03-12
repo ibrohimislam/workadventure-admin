@@ -81,9 +81,9 @@ export default async function adminRoutes(
 
     const wokaList = JSON.parse(readFileSync(join(dataDir, 'list.json'), 'utf-8'))
     const characterTextures: { id: string, url: string }[] = []
+
     const rawIds = request.query.characterTextureIds
     const characterTextureIds = Array.isArray(rawIds) ? rawIds : rawIds ? [rawIds] : []
-    
     const collectionNamespace = ["accessory", "body", "clothes", "eyes", "hair", "hat", "woka"]
     for (const namespace of collectionNamespace) {
       for (const collection of wokaList[namespace].collections) {
@@ -95,6 +95,8 @@ export default async function adminRoutes(
       }
     }
 
+    const companionTexture = wokaList.companion.collections[0].textures.find((texture: { id: string, url: string }) => texture.id === request.query.companionTextureId)
+
     const response = {
       status: 'ok',
       email: payload.email ?? payload.preferred_username ?? '',
@@ -105,10 +107,7 @@ export default async function adminRoutes(
       isCharacterTexturesValid: (characterTextures.length > 0),
       characterTextures: characterTextures.map(texture => ({ id: texture.id, url: `https://play.ehealth.id/${texture.url}` })),
       isCompanionTextureValid: true,
-      companionTexture: {
-        "id": "",
-        "url": ""
-      },
+      companionTexture: companionTexture,
       messages: [
         "string"
       ],
