@@ -104,8 +104,11 @@ export default async function adminRoutes(
       visitCardUrl: "https://mycompany.com/contact/me",
       isCharacterTexturesValid: (characterTextures.length > 0),
       characterTextures: characterTextures.map(texture => ({ id: texture.id, url: `https://play.ehealth.id/${texture.url}` })),
-      isCompanionTextureValid: false,
-      companionTexture: null,
+      isCompanionTextureValid: true,
+      companionTexture: {
+        "id": "",
+        "url": ""
+      },
       messages: [
         "string"
       ],
