@@ -9,8 +9,8 @@
   "expireOn": "2030-01-01T10:00:00.000Z",
   "canReport": true,
   "editable": true,
-  "loadingLogo": "https://example.com/logo.png",
-  "loginSceneLogo": "https://example.com/logo_login.png",
+  "loadingLogo": "https://ehealth.co.id/static/images/Logo-eH.svg",
+  "loginSceneLogo": "https://ehealth.co.id/static/images/Logo-eH.svg",
   "backgroundSceneImage": "https://example.com/background.png",
   "showPoweredBy": true,
   "thirdParty": {
