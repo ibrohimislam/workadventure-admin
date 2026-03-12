@@ -90,7 +90,9 @@ export default async function adminRoutes(
       }
     }
 
-    return {
+    console.log(characterTextures)
+
+    const response = {
       status: 'ok',
       email: payload.email ?? payload.preferred_username ?? '',
       username: payload.name ?? payload.preferred_username ?? payload.email ?? 'Anonymous',
@@ -115,6 +117,8 @@ export default async function adminRoutes(
       chatID: "string",
       canRecord: true
     }
+    console.log(response)
+    return reply.code(200).send(response)
   })
 
   // GET /api/login-url/:organizationMemberToken - Returns member from token
