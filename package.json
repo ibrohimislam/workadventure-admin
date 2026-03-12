@@ -23,6 +23,7 @@
     "typescript": "^5.9.2"
   },
   "devDependencies": {
-    "@aws-lite/s3-types": "^0.2.6"
+    "@aws-lite/s3-types": "^0.2.6",
+    "@types/qs": "^6.15.0"
   }
 }
