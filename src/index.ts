@@ -2,6 +2,8 @@ import fastify from 'fastify'
 import qs from 'qs'
 import GracefulServer from '@gquittet/graceful-server'
 import adminRoutes from './routes/admin'
+import { MemoryUserPersistence } from './persistence/MemoryUserPersistence'
+import { RedisUserPersistence } from './persistence/RedisUserPersistence'
 // import * as Sentry from '@sentry/node';
 
 // Sentry.init({
@@ -36,9 +38,13 @@ gracefulServer.on(GracefulServer.SHUTDOWN, (error: Error) => {
 
 fastifyInstance.log.info('Starting server...')
 
+const persistence = process.env.REDIS_URL
+  ? new RedisUserPersistence(process.env.REDIS_URL)
+  : new MemoryUserPersistence()
+
 const start = async () => {
   try {
-    await fastifyInstance.register(adminRoutes)
+    await fastifyInstance.register(adminRoutes, { persistence })
     await fastifyInstance.listen({ host: '0.0.0.0', port: 3000 })
     fastifyInstance.log.info(`server listening on port 3000`)
     gracefulServer.setReady()

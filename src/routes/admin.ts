@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { decodeJwt } from 'jose'
 import type { FastifyInstance, FastifyPluginOptions } from 'fastify'
+import type { UserPersistence } from '../persistence/UserPersistence'
 import type {
   MapQuerystring,
   RoomAccessQuerystring,
@@ -26,6 +27,10 @@ import type {
 
 const dataDir = join(process.cwd(), 'src')
 
+export interface AdminRoutesOptions extends FastifyPluginOptions {
+  persistence: UserPersistence
+}
+
 /** JWT payload shape */
 interface JwtPayload {
   sub: string
@@ -44,11 +49,15 @@ interface JwtPayload {
  */
 export default async function adminRoutes(
   fastify: FastifyInstance,
-  _opts: FastifyPluginOptions
+  opts: AdminRoutesOptions
 ) {
+  const persistence = opts.persistence
   // GET /api/capabilities - Get admin api capabilities
   fastify.get('/api/capabilities', async () => {
-    return {}
+    return {
+      'api/save-name': 'v1',
+      'api/save-textures': 'v1',
+    }
   })
 
   // GET /api/map - Returns map details or redirect (playUri, userId?, accessToken?)
@@ -76,6 +85,9 @@ export default async function adminRoutes(
       return reply.code(401).send({ status: 'error', message: 'Access token is not valid for this user' })
     }
 
+    const userIdentifier = payload.email ?? payload.preferred_username ?? ''
+    const saved = await persistence.get(userIdentifier)
+
     const roles = payload.realm_access?.roles ?? []
     const canEdit = roles.includes('editor')
 
@@ -83,7 +95,8 @@ export default async function adminRoutes(
     const characterTextures: { id: string, url: string }[] = []
 
     const rawIds = request.query.characterTextureIds
-    const characterTextureIds = Array.isArray(rawIds) ? rawIds : rawIds ? [rawIds] : []
+    const requestedIds = Array.isArray(rawIds) ? rawIds : rawIds ? [rawIds] : []
+    const characterTextureIds = saved?.textureIds?.length ? saved.textureIds : requestedIds
     const collectionNamespace = ["accessory", "body", "clothes", "eyes", "hair", "hat", "woka"]
     for (const namespace of collectionNamespace) {
       for (const collection of wokaList[namespace].collections) {
@@ -95,18 +108,19 @@ export default async function adminRoutes(
       }
     }
 
-    const companionTexture = wokaList.companion.collections[0].textures.find((texture: { id: string, url: string }) => texture.id === request.query.companionTextureId)
+    const companionId = saved?.companionTextureId !== undefined ? saved.companionTextureId : request.query.companionTextureId
+    const companionTexture = wokaList.companion.collections[0].textures.find((texture: { id: string, url: string }) => texture.id === companionId)
 
     const response = {
       status: 'ok',
       email: payload.email ?? payload.preferred_username ?? '',
-      username: payload.name ?? payload.preferred_username ?? payload.email ?? 'Anonymous',
+      username: saved?.name ?? payload.name ?? payload.preferred_username ?? payload.email ?? 'Anonymous',
       userUuid: payload.sub,
       tags: roles,
       visitCardUrl: "https://mycompany.com/contact/me",
       isCharacterTexturesValid: (characterTextures.length > 0),
       characterTextures: characterTextures.map(texture => ({ id: texture.id, url: `https://play.ehealth.id/${texture.url}` })),
-      isCompanionTextureValid: true,
+      isCompanionTextureValid: companionId == null ? true : !!companionTexture,
       companionTexture: companionTexture,
       messages: [
         "string"
@@ -148,17 +162,23 @@ export default async function adminRoutes(
   })
 
   // POST /api/save-name - Saves the name of the Woka
-  fastify.post<{ Body: SaveNameBody }>('/api/save-name', async (_request, reply) => {
+  fastify.post<{ Body: SaveNameBody }>('/api/save-name', async (request, reply) => {
+    const { userIdentifier, name } = request.body
+    await persistence.save(userIdentifier, { name })
     return reply.code(204).send()
   })
 
   // POST /api/save-textures - Saves the textures of the Woka
-  fastify.post<{ Body: SaveTexturesBody }>('/api/save-textures', async (_request, reply) => {
+  fastify.post<{ Body: SaveTexturesBody }>('/api/save-textures', async (request, reply) => {
+    const { userIdentifier, textures } = request.body
+    await persistence.save(userIdentifier, { textureIds: textures })
     return reply.code(204).send()
   })
 
   // POST /api/save-companion-texture - Saves the companion texture
-  fastify.post<{ Body: SaveCompanionTextureBody }>('/api/save-companion-texture', async (_request, reply) => {
+  fastify.post<{ Body: SaveCompanionTextureBody }>('/api/save-companion-texture', async (request, reply) => {
+    const { userIdentifier, texture } = request.body
+    await persistence.save(userIdentifier, { companionTextureId: texture ?? null })
     return reply.code(204).send()
   })
 
