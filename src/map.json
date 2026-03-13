@@ -1,5 +1,5 @@
 {
-  "mapUrl": "https://play.ehealth.id/map-storage/maps/map.tmj",
+  "mapUrl": null,
   "wamUrl": "https://play.ehealth.id/map-storage/maps/map.wam",
   "authenticationMandatory": true,
   "group": "https://play.ehealth.id/",
